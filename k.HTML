@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+<meta charset="UTF-8">
+<title>مترجم WLAN</title>
+<style>
+  body {
+    background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+    font-family: Arial, sans-serif;
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    margin: 0;
+  }
+
+  h1 {
+    margin-bottom: 20px;
+    text-shadow: 2px 2px 8px #000;
+  }
+
+  input {
+    padding: 10px 15px;
+    font-size: 1.2rem;
+    border-radius: 8px;
+    border: none;
+    width: 300px;
+    margin-bottom: 15px;
+  }
+
+  button {
+    padding: 10px 20px;
+    font-size: 1.2rem;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    background: #ff9800;
+    color: #0b1020;
+    transition: all 0.3s ease;
+  }
+
+  button:hover {
+    background: #f44336;
+    color: #fff;
+    transform: scale(1.1);
+  }
+
+  #result {
+    margin-top: 20px;
+    font-size: 1.5rem;
+    background: rgba(0,0,0,0.4);
+    padding: 15px 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 15px rgba(255,255,255,0.3);
+    letter-spacing: 2px;
+  }
+</style>
+</head>
+<body>
+
+<h1>مترجم WLAN</h1>
+<input id="input" type="text" placeholder="اكتب شيئًا...">
+<button id="btn">ترجم الآن</button>
+
+<div id="result">WLAN</div>
+
+<script>
+const input = document.getElementById("input");
+const btn = document.getElementById("btn");
+const result = document.getElementById("result");
+
+const translator = {
+  "1":"e", "e":"1",
+  "2":"d", "d":"2",
+  "3":"c", "c":"3",
+  "4":"b", "b":"4",
+  "5":"a", "a":"5",
+  "6":"9", "9":"6",
+  "7":"8", "8":"7",
+  "f":"0", "0":"f"
+};
+
+btn.onclick = function () {
+  let value = input.value.trim();
+  if(value === "") return;
+
+  // تجاهل FH وأي مسافة أمامها في البداية
+  value = value.replace(/^FH\s*/i, "");
+
+  // تجاهل كل شيء قبل -5G في النهاية مع -5G نفسها
+  const endIndex = value.indexOf("-5G");
+  if(endIndex !== -1){
+    value = value.slice(0, endIndex);
+  }
+
+  let translated = "";
+  for(let char of value){
+    // إذا موجود في الترجمات، استبدله، وإلا اتركه كما هو
+    translated += translator[char.toLowerCase()] !== undefined ? translator[char.toLowerCase()] : char;
+  }
+
+  // الآن نكتب WLAN مباشرة بدون مسافة + الترجمة
+  result.textContent = "WLAN +" + translated;
+
+  input.value = "";
+};
+</script>
+
+</body>
+</html>
